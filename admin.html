@@ -224,15 +224,16 @@ const ADMIN_PASSWORD = 'Imadeofure@2001';
 function login() {
   const pwd = document.getElementById('passwordInput').value;
   if (pwd === ADMIN_PASSWORD) {
+    document.getElementById('loginError').style.display = 'none';
     document.getElementById('loginPage').style.display = 'none';
     document.getElementById('adminPage').style.display = 'block';
     sessionStorage.setItem('fbp_admin', 'true');
     loadDashboard();
   } else {
     document.getElementById('loginError').style.display = 'block';
+    document.getElementById('loginError').textContent = 'Incorrect password. Try again.';
   }
 }
-
 function logout() {
   sessionStorage.removeItem('fbp_admin');
   document.getElementById('loginPage').style.display = 'flex';
@@ -240,10 +241,12 @@ function logout() {
   document.getElementById('passwordInput').value = '';
 }
 
-if (sessionStorage.getItem('fbp_admin') === 'true') {
-  document.getElementById('loginPage').style.display = 'none';
-  document.getElementById('adminPage').style.display = 'block';
-  loadDashboard();
+window.onload = function() {
+  if (sessionStorage.getItem('fbp_admin') === 'true') {
+    document.getElementById('loginPage').style.display = 'none';
+    document.getElementById('adminPage').style.display = 'block';
+    loadDashboard();
+  }
 }
 
 function switchTab(tab, el) {
