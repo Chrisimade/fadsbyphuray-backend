@@ -165,6 +165,106 @@ app.put('/api/orders/:id', async (req, res) => {
     res.status(500).json({ error: 'Failed to update order' });
   }
 });
+// ── ADD THESE ROUTES TO YOUR index.js ON GITHUB ──
+// Add them just before the setupDatabase() function
+
+const crypto = require('crypto');
+
+// ── AUTH REGISTER ──
+app.post('/api/auth/register', async (req, res) => {
+  try {
+    const { name, email, phone, password, refCode } = req.body;
+    const existing = await pool.query('SELECT * FROM users WHERE email=$1', [email]);
+    if (existing.rows.length > 0) return res.status(400).json({ error: 'Email already registered' });
+    const hashedPassword = crypto.createHash('sha256').update(password).digest('hex');
+    const result = await pool.query(
+      'INSERT INTO users (name, email, phone, password, wallet_balance, created_at) VALUES ($1,$2,$3,$4,0,NOW()) RETURNING id,name,email,phone,wallet_balance',
+      [name, email, phone, hashedPassword]
+    );
+    const user = result.rows[0];
+    if (refCode) {
+      try {
+        const referrer = await pool.query('SELECT * FROM users WHERE email=$1', [atob(refCode)]);
+        if (referrer.rows.length > 0) {
+          await pool.query('INSERT INTO referrals (referrer_email, referred_email, created_at) VALUES ($1,$2,NOW())', [referrer.rows[0].email, email]);
+        }
+      } catch(e) { console.log('Referral link error:', e); }
+    }
+    res.json(user);
+  } catch(err) {
+    console.error(err);
+    res.status(500).json({ error: 'Registration failed' });
+  }
+});
+
+// ── AUTH LOGIN ──
+app.post('/api/auth/login', async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    const hashedPassword = crypto.createHash('sha256').update(password).digest('hex');
+    const result = await pool.query('SELECT id,name,email,phone,wallet_balance FROM users WHERE email=$1 AND password=$2', [email, hashedPassword]);
+    if (result.rows.length === 0) return res.status(401).json({ error: 'Invalid email or password' });
+    res.json(result.rows[0]);
+  } catch(err) {
+    console.error(err);
+    res.status(500).json({ error: 'Login failed' });
+  }
+});
+
+// ── WALLET ──
+app.get('/api/wallet/:email', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT wallet_balance FROM users WHERE email=$1', [req.params.email]);
+    if (result.rows.length === 0) return res.json({ balance: 0, history: [] });
+    const history = await pool.query('SELECT * FROM wallet_history WHERE email=$1 ORDER BY created_at DESC LIMIT 20', [req.params.email]);
+    res.json({ balance: result.rows[0].wallet_balance || 0, history: history.rows });
+  } catch(err) {
+    console.error(err);
+    res.json({ balance: 0, history: [] });
+  }
+});
+
+// ── REFERRAL BONUS ──
+app.post('/api/referral-bonus', async (req, res) => {
+  try {
+    const { refCode, bonus, subtotal } = req.body;
+    const referrerEmail = Buffer.from(refCode, 'base64').toString('utf8');
+    const referrer = await pool.query('SELECT * FROM users WHERE email=$1', [referrerEmail]);
+    if (referrer.rows.length === 0) return res.json({ message: 'Referrer not found' });
+    await pool.query('UPDATE users SET wallet_balance = wallet_balance + $1 WHERE email=$2', [bonus, referrerEmail]);
+    await pool.query('INSERT INTO wallet_history (email, amount, description, created_at) VALUES ($1,$2,$3,NOW())', [referrerEmail, bonus, 'Referral bonus — friend purchased ₦'+subtotal.toLocaleString()]);
+    res.json({ message: 'Bonus added' });
+  } catch(err) {
+    console.error(err);
+    res.status(500).json({ error: 'Bonus error' });
+  }
+});
+
+// ── WITHDRAWAL REQUEST ──
+app.post('/api/withdrawal', async (req, res) => {
+  try {
+    const { email, name, accountName, bankName, accountNumber, amount } = req.body;
+    await pool.query(
+      'INSERT INTO withdrawals (email, name, account_name, bank_name, account_number, amount, status, created_at) VALUES ($1,$2,$3,$4,$5,$6,$7,NOW())',
+      [email, name, accountName, bankName, accountNumber, amount, 'pending']
+    );
+    res.json({ message: 'Withdrawal request submitted' });
+  } catch(err) {
+    console.error(err);
+    res.status(500).json({ error: 'Withdrawal error' });
+  }
+});
+
+// ── ORDERS BY CUSTOMER ──
+app.get('/api/orders/customer/:email', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT * FROM orders WHERE customer_email=$1 ORDER BY created_at DESC', [req.params.email]);
+    res.json(result.rows);
+  } catch(err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to fetch orders' });
+  }
+});
 
 // ── DATABASE SETUP ──
 async function setupDatabase() {
@@ -214,7 +314,47 @@ async function setupDatabase() {
     console.error('Database setup error:', err);
   }
 }
-
+await pool.query(`
+  CREATE TABLE IF NOT EXISTS users (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255),
+    email VARCHAR(255) UNIQUE,
+    phone VARCHAR(50),
+    password VARCHAR(255),
+    wallet_balance DECIMAL(10,2) DEFAULT 0,
+    created_at TIMESTAMP DEFAULT NOW()
+  )
+`);
+await pool.query(`
+  CREATE TABLE IF NOT EXISTS wallet_history (
+    id SERIAL PRIMARY KEY,
+    email VARCHAR(255),
+    amount DECIMAL(10,2),
+    description TEXT,
+    created_at TIMESTAMP DEFAULT NOW()
+  )
+`);
+await pool.query(`
+  CREATE TABLE IF NOT EXISTS referrals (
+    id SERIAL PRIMARY KEY,
+    referrer_email VARCHAR(255),
+    referred_email VARCHAR(255),
+    created_at TIMESTAMP DEFAULT NOW()
+  )
+`);
+await pool.query(`
+  CREATE TABLE IF NOT EXISTS withdrawals (
+    id SERIAL PRIMARY KEY,
+    email VARCHAR(255),
+    name VARCHAR(255),
+    account_name VARCHAR(255),
+    bank_name VARCHAR(255),
+    account_number VARCHAR(50),
+    amount DECIMAL(10,2),
+    status VARCHAR(50) DEFAULT 'pending',
+    created_at TIMESTAMP DEFAULT NOW()
+  )
+`);
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, async () => {
   await setupDatabase();
