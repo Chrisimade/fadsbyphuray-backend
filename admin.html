@@ -7,7 +7,7 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'Segoe UI',sans-serif;background:#FAF6F0;color:#1E1208;}
-.login-page{min-height:100vh;display:flex;align-items:center;justify-content:center;background:#1E1208;}
+.login-page{min-height:100vh;display:flex;align-items:center;justify-content:center;background:#1E1208;width:100%;}
 .login-box{background:#FAF6F0;padding:40px 28px;width:90%;max-width:360px;text-align:center;}
 .login-logo{font-size:22px;font-weight:500;color:#1E1208;letter-spacing:0.1em;margin-bottom:6px;}
 .login-logo span{color:#C9952A;}
@@ -17,7 +17,7 @@ body{font-family:'Segoe UI',sans-serif;background:#FAF6F0;color:#1E1208;}
 .login-btn{width:100%;background:#C4511A;color:white;border:none;padding:14px;font-size:12px;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;font-weight:500;}
 .login-btn:hover{background:#E8793A;}
 .login-error{font-size:12px;color:#C4511A;margin-top:10px;display:none;}
-.admin-page{display:none;}
+.admin-page{display:none;width:100%;}
 .admin-nav{background:#1E1208;padding:0 20px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
 .admin-nav-logo{font-size:14px;font-weight:500;color:#E8C060;letter-spacing:0.12em;text-transform:uppercase;}
 .admin-nav-right{display:flex;gap:12px;align-items:center;}
@@ -225,8 +225,8 @@ function login() {
   const pwd = document.getElementById('passwordInput').value;
   if (pwd === ADMIN_PASSWORD) {
     document.getElementById('loginError').style.display = 'none';
-    document.getElementById('loginPage').style.display = 'none';
-    document.getElementById('adminPage').style.display = 'block';
+    document.getElementById('loginPage').setAttribute('style', 'display:none !important');
+    document.getElementById('adminPage').setAttribute('style', 'display:block !important; width:100%');
     sessionStorage.setItem('fbp_admin', 'true');
     loadDashboard();
   } else {
@@ -243,8 +243,8 @@ function logout() {
 
 window.onload = function() {
   if (sessionStorage.getItem('fbp_admin') === 'true') {
-    document.getElementById('loginPage').style.display = 'none';
-    document.getElementById('adminPage').style.display = 'block';
+    document.getElementById('loginPage').setAttribute('style', 'display:none !important');
+    document.getElementById('adminPage').setAttribute('style', 'display:block !important; width:100%');
     loadDashboard();
   }
 }
