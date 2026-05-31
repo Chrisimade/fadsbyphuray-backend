@@ -19,7 +19,23 @@ app.use(express.json());
 app.get('/', (req, res) => {
   res.json({ message: 'Fads by Phuray backend is running!' });
 });
-
+app.get('/setup-products', async (req, res) => {
+  try {
+    await pool.query(`
+      INSERT INTO products (name, description, price, category, sizes, colours, images, in_stock, created_at, updated_at)
+      VALUES
+      ('Ankara Wrap Dress','A vibrant Ankara wrap dress.',35000,'Dresses','["XS","S","M","L","XL"]','["Blue & Gold","Red & Black"]','[]',true,NOW(),NOW()),
+      ('Agbada Ensemble','Premium Aso-oke Agbada set.',85000,'Traditional Wear','["S","M","L","XL"]','["Royal Blue","White"]','[]',true,NOW(),NOW()),
+      ('Lace Iro & Buba','Elegant lace Iro and Buba set.',55000,'Traditional Wear','["S","M","L","XL"]','["Gold","Ivory","Coral"]','[]',true,NOW(),NOW()),
+      ('Kaftan Jumpsuit','Afrocentric kaftan jumpsuit.',28000,'Jumpsuits','["XS","S","M","L","XL"]','["Black & Kente","Navy & Terracotta"]','[]',true,NOW(),NOW()),
+      ('Adire Co-ord Set','Hand-dyed Adire two-piece set.',42000,'Sets','["S","M","L"]','["Indigo","Earth Tones"]','[]',true,NOW(),NOW()),
+      ('Ember Wrap Coat','Luxurious burnt orange wrap coat.',1000,'Outerwear','["M"]','["Burnt Orange"]','[]',true,NOW(),NOW())
+    `);
+    res.json({ message: 'Products added successfully!' });
+  } catch(err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 // ── PRODUCTS ──
 app.get('/api/products', async (req, res) => {
   try {
