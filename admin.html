@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fads by Phuray — Admin</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',sans-serif;background:#FAF6F0;color:#1E1208;}
+.login-page{min-height:100vh;display:flex;align-items:center;justify-content:center;background:#1E1208;}
+.login-box{background:#FAF6F0;padding:40px 28px;width:90%;max-width:360px;text-align:center;}
+.login-logo{font-size:22px;font-weight:500;color:#1E1208;letter-spacing:0.1em;margin-bottom:6px;}
+.login-logo span{color:#C9952A;}
+.login-sub{font-size:12px;color:#9C7A58;margin-bottom:28px;letter-spacing:0.06em;}
+.login-input{width:100%;padding:13px 14px;border:1px solid #D4B896;background:white;font-size:14px;color:#1E1208;outline:none;margin-bottom:14px;border-radius:0;}
+.login-input:focus{border-color:#C4511A;}
+.login-btn{width:100%;background:#C4511A;color:white;border:none;padding:14px;font-size:12px;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;font-weight:500;}
+.login-btn:hover{background:#E8793A;}
+.login-error{font-size:12px;color:#C4511A;margin-top:10px;display:none;}
+.admin-page{display:none;}
+.admin-nav{background:#1E1208;padding:0 20px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+.admin-nav-logo{font-size:14px;font-weight:500;color:#E8C060;letter-spacing:0.12em;text-transform:uppercase;}
+.admin-nav-right{display:flex;gap:12px;align-items:center;}
+.admin-nav-btn{background:none;border:1px solid #3D1F0A;color:#9C7A58;padding:6px 14px;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;}
+.admin-nav-btn:hover{background:#3D1F0A;color:#F5ECD8;}
+.admin-tabs{background:#F5ECD8;border-bottom:1px solid #D4B896;display:flex;overflow-x:auto;scrollbar-width:none;}
+.admin-tabs::-webkit-scrollbar{display:none;}
+.admin-tab{flex:0 0 auto;padding:13px 20px;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:#9C7A58;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;}
+.admin-tab.active{color:#C4511A;border-bottom-color:#C4511A;}
+.admin-content{padding:20px;}
+.section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
+.section-header h2{font-size:18px;font-weight:500;color:#1E1208;}
+.btn-add{background:#C4511A;color:white;border:none;padding:10px 20px;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;}
+.btn-add:hover{background:#E8793A;}
+.stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:24px;}
+.stat-card{background:white;border:1px solid #D4B896;padding:16px;text-align:center;}
+.stat-number{font-size:28px;font-weight:500;color:#C4511A;margin-bottom:4px;}
+.stat-label{font-size:11px;color:#9C7A58;letter-spacing:0.06em;text-transform:uppercase;}
+.product-list{display:flex;flex-direction:column;gap:12px;}
+.product-item{background:white;border:1px solid #D4B896;padding:16px;display:flex;justify-content:space-between;align-items:flex-start;gap:12px;}
+.product-item-info h3{font-size:14px;color:#1E1208;margin-bottom:4px;}
+.product-item-info p{font-size:12px;color:#9C7A58;margin-bottom:2px;}
+.product-item-price{font-size:14px;color:#C4511A;font-weight:500;}
+.product-item-actions{display:flex;flex-direction:column;gap:6px;flex-shrink:0;}
+.btn-delete{background:transparent;color:#C4511A;border:1px solid #C4511A;padding:6px 12px;font-size:11px;cursor:pointer;text-transform:uppercase;letter-spacing:0.06em;}
+.btn-delete:hover{background:#C4511A;color:white;}
+.order-item{background:white;border:1px solid #D4B896;padding:16px;margin-bottom:12px;}
+.order-item-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+.order-ref{font-size:12px;color:#C9952A;font-weight:500;letter-spacing:0.06em;}
+.order-status{font-size:10px;padding:3px 10px;text-transform:uppercase;letter-spacing:0.08em;}
+.status-pending{background:#FFF3CD;color:#856404;}
+.status-processing{background:#CCE5FF;color:#004085;}
+.status-shipped{background:#D4EDDA;color:#155724;}
+.status-delivered{background:#D1ECF1;color:#0C5460;}
+.order-customer{font-size:13px;color:#1E1208;margin-bottom:4px;}
+.order-details{font-size:12px;color:#9C7A58;margin-bottom:10px;}
+.order-total{font-size:14px;color:#C4511A;font-weight:500;}
+.status-select{padding:6px 10px;border:1px solid #D4B896;background:white;font-size:11px;color:#1E1208;cursor:pointer;width:100%;margin-top:10px;}
+.customer-item{background:white;border:1px solid #D4B896;padding:16px;margin-bottom:12px;}
+.customer-name{font-size:14px;color:#1E1208;margin-bottom:4px;font-weight:500;}
+.customer-details{font-size:12px;color:#9C7A58;margin-bottom:2px;}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;align-items:center;justify-content:center;padding:20px;}
+.modal.open{display:flex;}
+.modal-box{background:#FAF6F0;width:100%;max-width:480px;max-height:90vh;overflow-y:auto;}
+.modal-header{background:#1E1208;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;}
+.modal-header h3{font-size:14px;color:#E8C060;letter-spacing:0.08em;text-transform:uppercase;}
+.modal-close{background:none;border:none;color:#9C7A58;font-size:20px;cursor:pointer;}
+.modal-body{padding:20px;}
+.form-group{margin-bottom:14px;}
+.form-group label{display:block;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:#9C7A58;margin-bottom:6px;}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:11px 13px;border:1px solid #D4B896;background:white;font-size:13px;color:#1E1208;outline:none;font-family:'Segoe UI',sans-serif;border-radius:0;-webkit-appearance:none;}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:#C4511A;}
+.form-group textarea{height:80px;resize:vertical;}
+.form-hint{font-size:11px;color:#9C7A58;margin-top:4px;}
+.modal-footer{padding:16px 20px;border-top:1px solid #D4B896;display:flex;gap:10px;}
+.btn-save{flex:1;background:#C4511A;color:white;border:none;padding:13px;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;}
+.btn-cancel{flex:1;background:transparent;color:#9C7A58;border:1px solid #D4B896;padding:13px;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;}
+.loading{text-align:center;padding:40px;font-size:13px;color:#9C7A58;}
+.empty{text-align:center;padding:40px;font-size:13px;color:#9C7A58;font-style:italic;}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(100px);background:#1E1208;color:#F5ECD8;padding:12px 24px;font-size:12px;z-index:999;transition:transform 0.3s;border-left:3px solid #C9952A;white-space:nowrap;}
+.toast.show{transform:translateX(-50%) translateY(0);}
+.tab-content{display:none;}
+.tab-content.active{display:block;}
+.stock-badge{display:inline-block;font-size:9px;padding:2px 8px;text-transform:uppercase;letter-spacing:0.06em;margin-left:6px;}
+.in-stock{background:#D4EDDA;color:#155724;}
+.out-stock{background:#F8D7DA;color:#721C24;}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="login-page" id="loginPage">
+  <div class="login-box">
+    <div class="login-logo">Fads <span>by</span> Phuray</div>
+    <p class="login-sub">Admin Dashboard</p>
+    <input type="password" class="login-input" id="passwordInput" placeholder="Enter password" onkeypress="if(event.key==='Enter')login()">
+    <button class="login-btn" onclick="login()">Login</button>
+    <p class="login-error" id="loginError">Incorrect password. Try again.</p>
+  </div>
+</div>
+
+<!-- ADMIN -->
+<div class="admin-page" id="adminPage">
+  <div class="admin-nav">
+    <div class="admin-nav-logo">Fads by Phuray</div>
+    <div class="admin-nav-right">
+      <button class="admin-nav-btn" onclick="logout()">Logout</button>
+    </div>
+  </div>
+
+  <div class="admin-tabs">
+    <div class="admin-tab active" onclick="switchTab('dashboard',this)">Dashboard</div>
+    <div class="admin-tab" onclick="switchTab('products',this)">Products</div>
+    <div class="admin-tab" onclick="switchTab('orders',this)">Orders</div>
+    <div class="admin-tab" onclick="switchTab('customers',this)">Customers</div>
+  </div>
+
+  <div class="admin-content">
+
+    <!-- DASHBOARD -->
+    <div class="tab-content active" id="tab-dashboard">
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-number" id="statProducts">0</div><div class="stat-label">Products</div></div>
+        <div class="stat-card"><div class="stat-number" id="statOrders">0</div><div class="stat-label">Orders</div></div>
+        <div class="stat-card"><div class="stat-number" id="statCustomers">0</div><div class="stat-label">Customers</div></div>
+        <div class="stat-card"><div class="stat-number" id="statRevenue">₦0</div><div class="stat-label">Revenue</div></div>
+      </div>
+      <div id="recentOrders"></div>
+    </div>
+
+    <!-- PRODUCTS -->
+    <div class="tab-content" id="tab-products">
+      <div class="section-header">
+        <h2>Products</h2>
+        <button class="btn-add" onclick="openAddProduct()">+ Add Product</button>
+      </div>
+      <div id="productList"><div class="loading">Loading...</div></div>
+    </div>
+
+    <!-- ORDERS -->
+    <div class="tab-content" id="tab-orders">
+      <div class="section-header"><h2>Orders</h2></div>
+      <div id="orderList"><div class="loading">Loading...</div></div>
+    </div>
+
+    <!-- CUSTOMERS -->
+    <div class="tab-content" id="tab-customers">
+      <div class="section-header"><h2>Customers</h2></div>
+      <div id="customerList"><div class="loading">Loading...</div></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ADD PRODUCT MODAL -->
+<div class="modal" id="productModal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3>Add New Product</h3>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>Product Name</label>
+        <input type="text" id="pName" placeholder="e.g. Ankara Wrap Dress">
+      </div>
+      <div class="form-group">
+        <label>Description</label>
+        <textarea id="pDesc" placeholder="Describe the product..."></textarea>
+      </div>
+      <div class="form-group">
+        <label>Price (₦)</label>
+        <input type="number" id="pPrice" placeholder="e.g. 35000">
+      </div>
+      <div class="form-group">
+        <label>Category</label>
+        <select id="pCategory">
+          <option value="Dresses">Dresses</option>
+          <option value="Traditional Wear">Traditional Wear</option>
+          <option value="Jumpsuits">Jumpsuits</option>
+          <option value="Sets">Sets</option>
+          <option value="Outerwear">Outerwear</option>
+          <option value="Tops">Tops</option>
+          <option value="Trousers">Trousers</option>
+          <option value="Accessories">Accessories</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Sizes</label>
+        <input type="text" id="pSizes" placeholder="e.g. XS, S, M, L, XL">
+        <p class="form-hint">Separate sizes with commas</p>
+      </div>
+      <div class="form-group">
+        <label>Colours</label>
+        <input type="text" id="pColours" placeholder="e.g. Black, Red, Blue">
+        <p class="form-hint">Separate colours with commas</p>
+      </div>
+      <div class="form-group">
+        <label>Product Image URL</label>
+        <input type="text" id="pImage" placeholder="https://... (optional)">
+        <p class="form-hint">Upload image to cloudinary.com and paste URL here</p>
+      </div>
+      <div class="form-group">
+        <label>Stock Status</label>
+        <select id="pStock">
+          <option value="true">In Stock</option>
+          <option value="false">Out of Stock</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-save" onclick="saveProduct()">Save Product</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const API = 'https://fadsbyphuray-backend.onrender.com';
+const ADMIN_PASSWORD = 'Imadeofure@2001';
+
+function login() {
+  const pwd = document.getElementById('passwordInput').value;
+  if (pwd === ADMIN_PASSWORD) {
+    document.getElementById('loginPage').style.display = 'none';
+    document.getElementById('adminPage').style.display = 'block';
+    sessionStorage.setItem('fbp_admin', 'true');
+    loadDashboard();
+  } else {
+    document.getElementById('loginError').style.display = 'block';
+  }
+}
+
+function logout() {
+  sessionStorage.removeItem('fbp_admin');
+  document.getElementById('loginPage').style.display = 'flex';
+  document.getElementById('adminPage').style.display = 'none';
+  document.getElementById('passwordInput').value = '';
+}
+
+if (sessionStorage.getItem('fbp_admin') === 'true') {
+  document.getElementById('loginPage').style.display = 'none';
+  document.getElementById('adminPage').style.display = 'block';
+  loadDashboard();
+}
+
+function switchTab(tab, el) {
+  document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('tab-' + tab).classList.add('active');
+  if (tab === 'products') loadProducts();
+  if (tab === 'orders') loadOrders();
+  if (tab === 'customers') loadCustomers();
+}
+
+async function loadDashboard() {
+  try {
+    const [products, orders, customers] = await Promise.all([
+      fetch(API + '/api/products').then(r => r.json()),
+      fetch(API + '/api/orders').then(r => r.json()),
+      fetch(API + '/api/customers').then(r => r.json())
+    ]);
+    document.getElementById('statProducts').textContent = products.length || 0;
+    document.getElementById('statOrders').textContent = orders.length || 0;
+    document.getElementById('statCustomers').textContent = customers.length || 0;
+    const revenue = orders.reduce((s, o) => s + Number(o.total_amount || 0), 0);
+    document.getElementById('statRevenue').textContent = '₦' + revenue.toLocaleString();
+    const recentEl = document.getElementById('recentOrders');
+    if (orders.length === 0) {
+      recentEl.innerHTML = '<div class="empty">No orders yet</div>';
+    } else {
+      recentEl.innerHTML = '<h3 style="font-size:14px;color:#1E1208;margin-bottom:12px;font-weight:500;">Recent Orders</h3>' +
+        orders.slice(0, 5).map(o => `
+          <div class="order-item">
+            <div class="order-item-header">
+              <span class="order-ref">${o.transaction_ref || 'N/A'}</span>
+              <span class="order-status status-${o.status || 'pending'}">${o.status || 'pending'}</span>
+            </div>
+            <div class="order-customer">${o.customer_name || 'Unknown'}</div>
+            <div class="order-total">₦${Number(o.total_amount || 0).toLocaleString()}</div>
+          </div>`).join('');
+    }
+  } catch(e) {
+    showToast('Error loading dashboard');
+  }
+}
+
+async function loadProducts() {
+  const el = document.getElementById('productList');
+  el.innerHTML = '<div class="loading">Loading...</div>';
+  try {
+    const res = await fetch(API + '/api/products');
+    const products = await res.json();
+    if (products.length === 0) {
+      el.innerHTML = '<div class="empty">No products yet. Add your first product!</div>';
+      return;
+    }
+    el.innerHTML = '<div class="product-list">' + products.map(p => `
+      <div class="product-item">
+        <div class="product-item-info">
+          <h3>${p.name}<span class="stock-badge ${p.in_stock ? 'in-stock' : 'out-stock'}">${p.in_stock ? 'In Stock' : 'Out of Stock'}</span></h3>
+          <p>${p.category || ''}</p>
+          <p>Sizes: ${Array.isArray(p.sizes) ? p.sizes.join(', ') : p.sizes}</p>
+          <p>Colours: ${Array.isArray(p.colours) ? p.colours.join(', ') : p.colours}</p>
+          <div class="product-item-price">₦${Number(p.price).toLocaleString()}</div>
+        </div>
+        <div class="product-item-actions">
+          <button class="btn-delete" onclick="deleteProduct(${p.id}, '${p.name}')">Delete</button>
+        </div>
+      </div>`).join('') + '</div>';
+  } catch(e) {
+    el.innerHTML = '<div class="empty">Error loading products</div>';
+  }
+}
+
+async function loadOrders() {
+  const el = document.getElementById('orderList');
+  el.innerHTML = '<div class="loading">Loading...</div>';
+  try {
+    const res = await fetch(API + '/api/orders');
+    const orders = await res.json();
+    if (orders.length === 0) {
+      el.innerHTML = '<div class="empty">No orders yet</div>';
+      return;
+    }
+    el.innerHTML = orders.map(o => `
+      <div class="order-item">
+        <div class="order-item-header">
+          <span class="order-ref">${o.transaction_ref || 'N/A'}</span>
+          <span class="order-status status-${o.status || 'pending'}">${o.status || 'pending'}</span>
+        </div>
+        <div class="order-customer">${o.customer_name || 'Unknown'}</div>
+        <div class="order-details">${o.customer_email || ''} · ${o.customer_phone || ''}</div>
+        <div class="order-details">${o.delivery_address || ''}</div>
+        <div class="order-total">₦${Number(o.total_amount || 0).toLocaleString()}</div>
+        <select class="status-select" onchange="updateOrderStatus(${o.id}, this.value)">
+          <option value="pending" ${o.status==='pending'?'selected':''}>Pending</option>
+          <option value="processing" ${o.status==='processing'?'selected':''}>Processing</option>
+          <option value="shipped" ${o.status==='shipped'?'selected':''}>Shipped</option>
+          <option value="delivered" ${o.status==='delivered'?'selected':''}>Delivered</option>
+        </select>
+      </div>`).join('');
+  } catch(e) {
+    el.innerHTML = '<div class="empty">Error loading orders</div>';
+  }
+}
+
+async function loadCustomers() {
+  const el = document.getElementById('customerList');
+  el.innerHTML = '<div class="loading">Loading...</div>';
+  try {
+    const res = await fetch(API + '/api/customers');
+    const customers = await res.json();
+    if (customers.length === 0) {
+      el.innerHTML = '<div class="empty">No customers yet</div>';
+      return;
+    }
+    el.innerHTML = customers.map(c => `
+      <div class="customer-item">
+        <div class="customer-name">${c.name || 'Unknown'}</div>
+        <div class="customer-details">📧 ${c.email || ''}</div>
+        <div class="customer-details">📞 ${c.phone || ''}</div>
+        <div class="customer-details">📍 ${c.address || ''}</div>
+      </div>`).join('');
+  } catch(e) {
+    el.innerHTML = '<div class="empty">Error loading customers</div>';
+  }
+}
+
+function openAddProduct() {
+  document.getElementById('productModal').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('productModal').classList.remove('open');
+  document.getElementById('pName').value = '';
+  document.getElementById('pDesc').value = '';
+  document.getElementById('pPrice').value = '';
+  document.getElementById('pSizes').value = '';
+  document.getElementById('pColours').value = '';
+  document.getElementById('pImage').value = '';
+  document.getElementById('pStock').value = 'true';
+}
+
+async function saveProduct() {
+  const name = document.getElementById('pName').value.trim();
+  const desc = document.getElementById('pDesc').value.trim();
+  const price = document.getElementById('pPrice').value.trim();
+  const category = document.getElementById('pCategory').value;
+  const sizes = document.getElementById('pSizes').value.split(',').map(s => s.trim()).filter(s => s);
+  const colours = document.getElementById('pColours').value.split(',').map(c => c.trim()).filter(c => c);
+  const image = document.getElementById('pImage').value.trim();
+  const inStock = document.getElementById('pStock').value === 'true';
+
+  if (!name || !price) { showToast('Please enter product name and price'); return; }
+
+  try {
+    const res = await fetch(API/api/products", {
+
+method: 'POST',
+
+headers: ['Content-Type': 'application/json'), body: JSON.stringify({ name, description: desc, price: Number (price), category });
+
+if (res.ok) {
+
+showToast("Product added successfully!');
+
+closeModal();
+
+loadProducts();
+
+loadDashboard();
+
+} else {
+
+}
+
+showToast("Error adding product');
+
+} catch(e) {
+
+showToast('Error adding product');
+
+}
+
+async function deleteProduct(id, name) {
+
+if (!confirm('Delete name (2')) return;
+
+try { const res await fetch(API/api/products/ id, { method: 'DELETE' }); }
+
+if (res.ok) [
+
+showToast('Product deleted');
+
+loadProducts();
+
+LoadDashboard();
+
+} catch(e) {
+
+showToast('Error deleting product'); }
+
+}
+
+async function updateOrderStatus(id, status) {
+
+try {
+
+amait fetch(API + '/api/orders/ id, ( method: 'PUT headers: { 'Content-Type': 'application/json'}, body: JSON.stringify({ status )) });
+
+showToast('Order status updated!');
+
+} catch(e) {
+
+showToast('Error updating order"); }
+
+function showToast(msg) {
+
+1
+
+const t document.getElementById('toast'); t.textContent = msg: t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 3000);
+
+</script>
+
+</body>
+
+</html>
