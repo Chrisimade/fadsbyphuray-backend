@@ -11,7 +11,7 @@ body{font-family:'Segoe UI',sans-serif;background:#FAF6F0;color:#1E1208;}
 .top-nav-logo{font-size:14px;font-weight:500;color:#E8C060;letter-spacing:0.12em;text-transform:uppercase;}
 .tabs{background:#F5ECD8;border-bottom:1px solid #D4B896;display:flex;overflow-x:auto;}
 .tabs::-webkit-scrollbar{display:none;}
-.tab{flex:0 0 auto;padding:14px 20px;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#9C7A58;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;background:none;border-top:none;border-left:none;border-right:none;font-family:'Segoe UI',sans-serif;}
+.tab{flex:0 0 auto;padding:14px 20px;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#9C7A58;cursor:pointer;border-bottom:2px solid transparent;background:none;border-top:none;border-left:none;border-right:none;font-family:'Segoe UI',sans-serif;}
 .tab.active{color:#C4511A;border-bottom:2px solid #C4511A;}
 .content{padding:20px;}
 .page{display:none;}
@@ -25,9 +25,10 @@ body{font-family:'Segoe UI',sans-serif;background:#FAF6F0;color:#1E1208;}
 .btn-orange{background:#C4511A;color:white;border:none;padding:11px 20px;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;font-family:'Segoe UI',sans-serif;}
 .card{background:white;border:1px solid #D4B896;padding:16px;margin-bottom:12px;}
 .card-title{font-size:14px;font-weight:500;margin-bottom:4px;}
-.card-sub{font-size:12px;color:#9C7A58;margin-bottom:8px;}
+.card-sub{font-size:12px;color:#9C7A58;margin-bottom:4px;}
 .card-price{font-size:14px;color:#C4511A;font-weight:500;}
 .btn-red{background:none;border:1px solid #C4511A;color:#C4511A;padding:7px 14px;font-size:11px;cursor:pointer;text-transform:uppercase;letter-spacing:0.06em;font-family:'Segoe UI',sans-serif;margin-top:10px;}
+.btn-green{background:#155724;color:white;border:none;padding:7px 14px;font-size:11px;cursor:pointer;text-transform:uppercase;letter-spacing:0.06em;font-family:'Segoe UI',sans-serif;margin-top:10px;margin-left:6px;}
 .empty{text-align:center;padding:40px;color:#9C7A58;font-style:italic;}
 .loading{text-align:center;padding:40px;color:#9C7A58;}
 .form-wrap{background:white;border:1px solid #D4B896;padding:20px;margin-bottom:20px;}
@@ -44,12 +45,22 @@ body{font-family:'Segoe UI',sans-serif;background:#FAF6F0;color:#1E1208;}
 .status-processing{background:#CCE5FF;color:#004085;}
 .status-shipped{background:#D4EDDA;color:#155724;}
 .status-delivered{background:#D1ECF1;color:#0C5460;}
+.status-paid{background:#D4EDDA;color:#155724;}
+.status-rejected{background:#F8D7DA;color:#721C24;}
 .status-select{width:100%;padding:8px 10px;border:1px solid #D4B896;background:white;font-size:12px;color:#1E1208;margin-top:10px;font-family:'Segoe UI',sans-serif;-webkit-appearance:none;border-radius:0;}
 .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(100px);background:#1E1208;color:#F5ECD8;padding:12px 24px;font-size:12px;z-index:999;transition:transform 0.3s;border-left:3px solid #C9952A;white-space:nowrap;}
 .toast.show{transform:translateX(-50%) translateY(0);}
 .stock-badge{display:inline-block;font-size:9px;padding:2px 8px;text-transform:uppercase;letter-spacing:0.06em;margin-left:6px;border-radius:2px;}
 .in-stock{background:#D4EDDA;color:#155724;}
 .out-stock{background:#F8D7DA;color:#721C24;}
+.withdrawal-amount{font-size:16px;color:#C4511A;font-weight:500;margin:6px 0;}
+.bank-details{background:#FAF6F0;border:1px solid #D4B896;padding:12px;margin:10px 0;font-size:12px;}
+.bank-details p{margin-bottom:4px;color:#3D1F0A;}
+.bank-details span{color:#9C7A58;}
+.withdrawal-actions{display:flex;gap:8px;margin-top:10px;}
+.btn-approve{background:#155724;color:white;border:none;padding:8px 16px;font-size:11px;cursor:pointer;text-transform:uppercase;letter-spacing:0.06em;font-family:'Segoe UI',sans-serif;flex:1;}
+.btn-reject{background:#721C24;color:white;border:none;padding:8px 16px;font-size:11px;cursor:pointer;text-transform:uppercase;letter-spacing:0.06em;font-family:'Segoe UI',sans-serif;flex:1;}
+.pending-count{background:#C4511A;color:white;font-size:10px;padding:2px 6px;border-radius:10px;margin-left:6px;}
 </style>
 </head>
 <body>
@@ -64,6 +75,7 @@ body{font-family:'Segoe UI',sans-serif;background:#FAF6F0;color:#1E1208;}
   <button class="tab" onclick="showPage('products',this)">Products</button>
   <button class="tab" onclick="showPage('orders',this)">Orders</button>
   <button class="tab" onclick="showPage('customers',this)">Customers</button>
+  <button class="tab" id="withdrawTab" onclick="showPage('withdrawals',this)">Withdrawals</button>
 </div>
 
 <div class="content">
@@ -75,6 +87,8 @@ body{font-family:'Segoe UI',sans-serif;background:#FAF6F0;color:#1E1208;}
       <div class="stat"><div class="stat-num" id="statOrders">...</div><div class="stat-label">Orders</div></div>
       <div class="stat"><div class="stat-num" id="statCustomers">...</div><div class="stat-label">Customers</div></div>
       <div class="stat"><div class="stat-num" id="statRevenue">...</div><div class="stat-label">Revenue</div></div>
+      <div class="stat"><div class="stat-num" id="statPendingWithdrawals">...</div><div class="stat-label">Pending Withdrawals</div></div>
+      <div class="stat"><div class="stat-num" id="statTotalWithdrawals">...</div><div class="stat-label">Total Withdrawn</div></div>
     </div>
     <div id="recentOrders"></div>
   </div>
@@ -128,6 +142,12 @@ body{font-family:'Segoe UI',sans-serif;background:#FAF6F0;color:#1E1208;}
     <div id="customerList"><div class="loading">Loading...</div></div>
   </div>
 
+  <!-- WITHDRAWALS -->
+  <div class="page" id="page-withdrawals">
+    <div class="page-header"><div class="page-title">Withdrawal Requests</div></div>
+    <div id="withdrawalList"><div class="loading">Loading...</div></div>
+  </div>
+
 </div>
 
 <div class="toast" id="toast"></div>
@@ -144,23 +164,32 @@ function showPage(name, el) {
   if(name==='orders') loadOrders();
   if(name==='customers') loadCustomers();
   if(name==='dashboard') loadDashboard();
+  if(name==='withdrawals') loadWithdrawals();
 }
 
 async function loadDashboard() {
   try {
-    const [p,o,c] = await Promise.all([
+    const [p,o,c,w] = await Promise.all([
       fetch(API+'/api/products').then(r=>r.json()),
       fetch(API+'/api/orders').then(r=>r.json()),
-      fetch(API+'/api/customers').then(r=>r.json())
+      fetch(API+'/api/customers').then(r=>r.json()),
+      fetch(API+'/api/withdrawals').then(r=>r.json()).catch(()=>[])
     ]);
     document.getElementById('statProducts').textContent = p.length;
     document.getElementById('statOrders').textContent = o.length;
     document.getElementById('statCustomers').textContent = c.length;
     const rev = o.reduce((s,x)=>s+Number(x.total_amount||0),0);
     document.getElementById('statRevenue').textContent = '₦'+rev.toLocaleString();
-    const el = document.getElementById('recentOrders');
-    if(o.length===0){el.innerHTML='<div class="empty">No orders yet</div>';return;}
-    el.innerHTML='<div class="page-title" style="margin-bottom:12px;">Recent Orders</div>'+
+    const pendingW = Array.isArray(w)?w.filter(x=>x.status==='pending'):[];
+    const totalW = Array.isArray(w)?w.filter(x=>x.status==='paid').reduce((s,x)=>s+Number(x.amount||0),0):0;
+    document.getElementById('statPendingWithdrawals').textContent = pendingW.length;
+    document.getElementById('statTotalWithdrawals').textContent = '₦'+totalW.toLocaleString();
+    if(pendingW.length>0){
+      document.getElementById('withdrawTab').innerHTML = 'Withdrawals <span class="pending-count">'+pendingW.length+'</span>';
+    }
+    const recentEl = document.getElementById('recentOrders');
+    if(o.length===0){recentEl.innerHTML='<div class="empty">No orders yet</div>';return;}
+    recentEl.innerHTML='<div style="font-size:14px;font-weight:500;color:#1E1208;margin-bottom:12px;">Recent Orders</div>'+
       o.slice(0,5).map(x=>`
         <div class="card">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
@@ -170,7 +199,7 @@ async function loadDashboard() {
           <div class="card-title">${x.customer_name||'Unknown'}</div>
           <div class="card-price">₦${Number(x.total_amount||0).toLocaleString()}</div>
         </div>`).join('');
-  } catch(e){ showToast('Error loading dashboard'); }
+  } catch(e) { showToast('Error loading dashboard'); }
 }
 
 async function loadProducts() {
@@ -179,21 +208,17 @@ async function loadProducts() {
   try {
     const res = await fetch(API+'/api/products');
     const data = await res.json();
-    if(data.length===0){el.innerHTML='<div class="empty">No products yet. Tap Add Product to start!</div>';return;}
+    if(data.length===0){el.innerHTML='<div class="empty">No products yet. Tap Add Product!</div>';return;}
     el.innerHTML = data.map(p=>`
       <div class="card">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;">
-          <div>
-            <div class="card-title">${p.name}<span class="stock-badge ${p.in_stock?'in-stock':'out-stock'}">${p.in_stock?'In Stock':'Out of Stock'}</span></div>
-            <div class="card-sub">${p.category||''}</div>
-            <div class="card-sub">Sizes: ${Array.isArray(p.sizes)?p.sizes.join(', '):p.sizes}</div>
-            <div class="card-sub">Colours: ${Array.isArray(p.colours)?p.colours.join(', '):p.colours}</div>
-            <div class="card-price">₦${Number(p.price).toLocaleString()}</div>
-          </div>
-        </div>
+        <div class="card-title">${p.name}<span class="stock-badge ${p.in_stock?'in-stock':'out-stock'}">${p.in_stock?'In Stock':'Out of Stock'}</span></div>
+        <div class="card-sub">${p.category||''}</div>
+        <div class="card-sub">Sizes: ${Array.isArray(p.sizes)?p.sizes.join(', '):p.sizes}</div>
+        <div class="card-sub">Colours: ${Array.isArray(p.colours)?p.colours.join(', '):p.colours}</div>
+        <div class="card-price">₦${Number(p.price).toLocaleString()}</div>
         <button class="btn-red" onclick="deleteProduct(${p.id},'${p.name}')">Delete</button>
       </div>`).join('');
-  } catch(e){ el.innerHTML='<div class="empty">Error loading products</div>'; }
+  } catch(e) { el.innerHTML='<div class="empty">Error loading products</div>'; }
 }
 
 async function loadOrders() {
@@ -213,6 +238,7 @@ async function loadOrders() {
         <div class="card-sub">${o.customer_email||''}</div>
         <div class="card-sub">${o.customer_phone||''}</div>
         <div class="card-sub">${o.delivery_address||''}</div>
+        <div class="card-sub">Shipping Zone: ${o.shipping_zone||'N/A'}</div>
         <div class="card-price">₦${Number(o.total_amount||0).toLocaleString()}</div>
         <select class="status-select" onchange="updateOrder(${o.id},this.value)">
           <option value="pending" ${o.status==='pending'?'selected':''}>Pending</option>
@@ -221,7 +247,7 @@ async function loadOrders() {
           <option value="delivered" ${o.status==='delivered'?'selected':''}>Delivered</option>
         </select>
       </div>`).join('');
-  } catch(e){ el.innerHTML='<div class="empty">Error loading orders</div>'; }
+  } catch(e) { el.innerHTML='<div class="empty">Error loading orders</div>'; }
 }
 
 async function loadCustomers() {
@@ -238,7 +264,38 @@ async function loadCustomers() {
         <div class="card-sub">📞 ${c.phone||''}</div>
         <div class="card-sub">📍 ${c.address||''}</div>
       </div>`).join('');
-  } catch(e){ el.innerHTML='<div class="empty">Error loading customers</div>'; }
+  } catch(e) { el.innerHTML='<div class="empty">Error loading customers</div>'; }
+}
+
+async function loadWithdrawals() {
+  const el = document.getElementById('withdrawalList');
+  el.innerHTML='<div class="loading">Loading...</div>';
+  try {
+    const res = await fetch(API+'/api/withdrawals');
+    if(!res.ok){el.innerHTML='<div class="empty">No withdrawal requests yet</div>';return;}
+    const data = await res.json();
+    if(!Array.isArray(data)||data.length===0){el.innerHTML='<div class="empty">No withdrawal requests yet</div>';return;}
+    el.innerHTML = data.map(w=>`
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+          <span style="font-size:12px;color:#9C7A58;">${new Date(w.created_at).toLocaleDateString()}</span>
+          <span class="status-badge status-${w.status||'pending'}">${w.status||'pending'}</span>
+        </div>
+        <div class="card-title">${w.name||'Unknown'}</div>
+        <div class="card-sub">📧 ${w.email||''}</div>
+        <div class="withdrawal-amount">₦${Number(w.amount||0).toLocaleString()}</div>
+        <div class="bank-details">
+          <p><span>Account Name: </span>${w.account_name||''}</p>
+          <p><span>Bank: </span>${w.bank_name||''}</p>
+          <p><span>Account Number: </span>${w.account_number||''}</p>
+        </div>
+        ${w.status==='pending'?`
+        <div class="withdrawal-actions">
+          <button class="btn-approve" onclick="updateWithdrawal(${w.id},'paid')">✓ Mark as Paid</button>
+          <button class="btn-reject" onclick="updateWithdrawal(${w.id},'rejected')">✗ Reject</button>
+        </div>`:''}
+      </div>`).join('');
+  } catch(e) { el.innerHTML='<div class="empty">No withdrawal requests yet</div>'; }
 }
 
 async function saveProduct() {
@@ -250,7 +307,7 @@ async function saveProduct() {
   const colours = document.getElementById('pColours').value.split(',').map(c=>c.trim()).filter(c=>c);
   const image = document.getElementById('pImage').value.trim();
   const inStock = document.getElementById('pStock').value==='true';
-  if(!name||!price){showToast('Please enter name and price');return;}
+  if(!name||!price){showToast('Please enter product name and price');return;}
   try {
     const res = await fetch(API+'/api/products',{
       method:'POST',
@@ -265,28 +322,35 @@ async function saveProduct() {
       document.getElementById('pSizes').value='';
       document.getElementById('pColours').value='';
       document.getElementById('pImage').value='';
-    } else { showToast('Error saving product'); }
-  } catch(e){ showToast('Error saving product'); }
+    }else{showToast('Error saving product');}
+  }catch(e){showToast('Error saving product');}
 }
 
 async function deleteProduct(id,name){
   if(!confirm('Delete '+name+'?'))return;
-  try {
+  try{
     await fetch(API+'/api/products/'+id,{method:'DELETE'});
     showToast('Product deleted');
     loadProducts();
-  } catch(e){ showToast('Error deleting product'); }
+  }catch(e){showToast('Error deleting product');}
 }
 
 async function updateOrder(id,status){
-  try {
-    await fetch(API+'/api/orders/'+id,{
-      method:'PUT',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({status})
-    });
-    showToast('Order updated!');
-  } catch(e){ showToast('Error updating order'); }
+  try{
+    await fetch(API+'/api/orders/'+id,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({status})});
+    showToast('Order status updated!');
+  }catch(e){showToast('Error updating order');}
+}
+
+async function updateWithdrawal(id,status){
+  try{
+    const res = await fetch(API+'/api/withdrawals/'+id,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({status})});
+    if(res.ok){
+      showToast(status==='paid'?'Marked as paid!':'Withdrawal rejected');
+      loadWithdrawals();
+      loadDashboard();
+    }else{showToast('Error updating withdrawal');}
+  }catch(e){showToast('Error updating withdrawal');}
 }
 
 function showToast(msg){
