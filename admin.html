@@ -6,67 +6,84 @@
 <title>Fads by Phuray — Admin</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:'Segoe UI',sans-serif;background:#FAF6F0;color:#1E1208;}
-.top-nav{background:#1E1208;padding:0 20px;height:56px;display:flex;align-items:center;}
-.top-nav-logo{font-size:14px;font-weight:500;color:#E8C060;letter-spacing:0.12em;text-transform:uppercase;}
-.tabs{background:#F5ECD8;border-bottom:1px solid #D4B896;display:flex;overflow-x:auto;}
+body{font-family:'Segoe UI',sans-serif;background:#0A0705;color:#F5ECD8;}
+.top-nav{background:#120D09;border-bottom:1px solid rgba(201,149,42,0.2);padding:0 20px;height:56px;display:flex;align-items:center;justify-content:space-between;}
+.top-nav-logo{font-size:14px;font-weight:600;color:#C9952A;letter-spacing:0.14em;text-transform:uppercase;}
+.tabs{background:#120D09;border-bottom:1px solid rgba(201,149,42,0.15);display:flex;overflow-x:auto;}
 .tabs::-webkit-scrollbar{display:none;}
-.tab{flex:0 0 auto;padding:14px 20px;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#9C7A58;cursor:pointer;border-bottom:2px solid transparent;background:none;border-top:none;border-left:none;border-right:none;font-family:'Segoe UI',sans-serif;}
-.tab.active{color:#C4511A;border-bottom:2px solid #C4511A;}
+.tab{flex:0 0 auto;padding:14px 18px;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#8B6A45;cursor:pointer;border-bottom:2px solid transparent;background:none;border-top:none;border-left:none;border-right:none;font-family:'Segoe UI',sans-serif;white-space:nowrap;font-weight:500;}
+.tab.active{color:#C9952A;border-bottom:2px solid #C9952A;}
 .content{padding:20px;}
 .page{display:none;}
 .page.active{display:block;}
-.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:24px;}
-.stat{background:white;border:1px solid #D4B896;padding:16px;text-align:center;}
-.stat-num{font-size:28px;font-weight:500;color:#C4511A;}
-.stat-label{font-size:11px;color:#9C7A58;text-transform:uppercase;letter-spacing:0.06em;margin-top:4px;}
-.page-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;}
-.page-title{font-size:18px;font-weight:500;}
-.btn-orange{background:#C4511A;color:white;border:none;padding:11px 20px;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;font-family:'Segoe UI',sans-serif;}
-.card{background:white;border:1px solid #D4B896;padding:16px;margin-bottom:12px;}
-.card-title{font-size:14px;font-weight:500;margin-bottom:4px;}
-.card-sub{font-size:12px;color:#9C7A58;margin-bottom:4px;}
-.card-price{font-size:14px;color:#C4511A;font-weight:500;}
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:24px;}
+.stat{background:#1C1410;border:1px solid rgba(201,149,42,0.15);padding:16px;text-align:center;}
+.stat-num{font-size:26px;font-weight:600;color:#C9952A;margin-bottom:4px;}
+.stat-label{font-size:10px;color:#8B6A45;text-transform:uppercase;letter-spacing:0.08em;}
+.card{background:#1C1410;border:1px solid rgba(201,149,42,0.12);padding:16px;margin-bottom:12px;}
+.card-title{font-size:14px;font-weight:500;color:#F5ECD8;margin-bottom:4px;}
+.card-sub{font-size:12px;color:#8B6A45;margin-bottom:4px;}
+.card-price{font-size:14px;color:#C9952A;font-weight:600;margin-top:6px;}
+.btn-orange{background:#C4511A;color:white;border:none;padding:10px 20px;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;font-family:'Segoe UI',sans-serif;font-weight:500;}
+.btn-gold{background:#C9952A;color:#0A0705;border:none;padding:10px 20px;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;font-family:'Segoe UI',sans-serif;font-weight:600;}
 .btn-red{background:none;border:1px solid #C4511A;color:#C4511A;padding:7px 14px;font-size:11px;cursor:pointer;text-transform:uppercase;letter-spacing:0.06em;font-family:'Segoe UI',sans-serif;margin-top:10px;}
 .btn-green{background:#155724;color:white;border:none;padding:7px 14px;font-size:11px;cursor:pointer;text-transform:uppercase;letter-spacing:0.06em;font-family:'Segoe UI',sans-serif;margin-top:10px;margin-left:6px;}
-.empty{text-align:center;padding:40px;color:#9C7A58;font-style:italic;}
-.loading{text-align:center;padding:40px;color:#9C7A58;}
-.form-wrap{background:white;border:1px solid #D4B896;padding:20px;margin-bottom:20px;}
-.form-title{font-size:14px;font-weight:500;margin-bottom:16px;color:#1E1208;}
+.btn-reject{background:#721C24;color:white;border:none;padding:8px 16px;font-size:11px;cursor:pointer;text-transform:uppercase;letter-spacing:0.06em;font-family:'Segoe UI',sans-serif;margin-top:10px;margin-left:6px;}
+.empty{text-align:center;padding:48px;color:#8B6A45;font-style:italic;font-size:13px;}
+.loading{text-align:center;padding:48px;color:#8B6A45;font-size:12px;letter-spacing:0.06em;}
+.form-wrap{background:#1C1410;border:1px solid rgba(201,149,42,0.12);padding:20px;margin-bottom:20px;}
+.form-title{font-size:13px;font-weight:600;margin-bottom:18px;color:#F5ECD8;letter-spacing:0.06em;text-transform:uppercase;}
 .fg{margin-bottom:14px;}
-.fg label{display:block;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:#9C7A58;margin-bottom:6px;}
-.fg input,.fg select,.fg textarea{width:100%;padding:11px 13px;border:1px solid #D4B896;background:white;font-size:13px;color:#1E1208;outline:none;font-family:'Segoe UI',sans-serif;-webkit-appearance:none;border-radius:0;}
-.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:#C4511A;}
+.fg label{display:block;font-size:9px;letter-spacing:0.14em;text-transform:uppercase;color:#8B6A45;margin-bottom:6px;font-weight:500;}
+.fg input,.fg select,.fg textarea{width:100%;padding:11px 13px;border:1px solid rgba(139,106,69,0.3);background:#0A0705;font-size:13px;color:#F5ECD8;outline:none;font-family:'Segoe UI',sans-serif;-webkit-appearance:none;border-radius:0;}
+.fg input:focus,.fg select:focus{border-color:#C9952A;}
 .fg textarea{height:80px;resize:vertical;}
-.fg-hint{font-size:11px;color:#9C7A58;margin-top:4px;}
-.btn-save{width:100%;background:#C4511A;color:white;border:none;padding:14px;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;font-family:'Segoe UI',sans-serif;margin-top:6px;}
-.status-badge{display:inline-block;font-size:10px;padding:3px 10px;text-transform:uppercase;letter-spacing:0.06em;border-radius:2px;}
-.status-pending{background:#FFF3CD;color:#856404;}
-.status-processing{background:#CCE5FF;color:#004085;}
-.status-shipped{background:#D4EDDA;color:#155724;}
-.status-delivered{background:#D1ECF1;color:#0C5460;}
-.status-paid{background:#D4EDDA;color:#155724;}
-.status-rejected{background:#F8D7DA;color:#721C24;}
-.status-select{width:100%;padding:8px 10px;border:1px solid #D4B896;background:white;font-size:12px;color:#1E1208;margin-top:10px;font-family:'Segoe UI',sans-serif;-webkit-appearance:none;border-radius:0;}
-.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(100px);background:#1E1208;color:#F5ECD8;padding:12px 24px;font-size:12px;z-index:999;transition:transform 0.3s;border-left:3px solid #C9952A;white-space:nowrap;}
+.fg-hint{font-size:11px;color:#8B6A45;margin-top:4px;}
+.btn-save{width:100%;background:#C9952A;color:#0A0705;border:none;padding:14px;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;font-family:'Segoe UI',sans-serif;margin-top:6px;font-weight:600;}
+.status-badge{display:inline-block;font-size:9px;padding:3px 10px;text-transform:uppercase;letter-spacing:0.08em;border-radius:2px;}
+.status-pending{background:rgba(201,149,42,0.15);color:#C9952A;}
+.status-processing{background:rgba(0,64,133,0.2);color:#6EA8FE;}
+.status-shipped{background:rgba(21,87,36,0.2);color:#75B798;}
+.status-delivered{background:rgba(12,84,96,0.2);color:#6EDFF6;}
+.status-paid{background:rgba(21,87,36,0.2);color:#75B798;}
+.status-rejected{background:rgba(114,28,36,0.2);color:#EA868F;}
+.status-select{width:100%;padding:8px 10px;border:1px solid rgba(139,106,69,0.3);background:#0A0705;font-size:12px;color:#F5ECD8;margin-top:10px;font-family:'Segoe UI',sans-serif;-webkit-appearance:none;border-radius:0;}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(100px);background:#1C1410;color:#F5ECD8;padding:12px 24px;font-size:11px;z-index:999;transition:transform 0.3s;border-left:3px solid #C9952A;white-space:nowrap;border:1px solid rgba(201,149,42,0.3);}
 .toast.show{transform:translateX(-50%) translateY(0);}
 .stock-badge{display:inline-block;font-size:9px;padding:2px 8px;text-transform:uppercase;letter-spacing:0.06em;margin-left:6px;border-radius:2px;}
-.in-stock{background:#D4EDDA;color:#155724;}
-.out-stock{background:#F8D7DA;color:#721C24;}
-.withdrawal-amount{font-size:16px;color:#C4511A;font-weight:500;margin:6px 0;}
-.bank-details{background:#FAF6F0;border:1px solid #D4B896;padding:12px;margin:10px 0;font-size:12px;}
-.bank-details p{margin-bottom:4px;color:#3D1F0A;}
-.bank-details span{color:#9C7A58;}
-.withdrawal-actions{display:flex;gap:8px;margin-top:10px;}
-.btn-approve{background:#155724;color:white;border:none;padding:8px 16px;font-size:11px;cursor:pointer;text-transform:uppercase;letter-spacing:0.06em;font-family:'Segoe UI',sans-serif;flex:1;}
-.btn-reject{background:#721C24;color:white;border:none;padding:8px 16px;font-size:11px;cursor:pointer;text-transform:uppercase;letter-spacing:0.06em;font-family:'Segoe UI',sans-serif;flex:1;}
-.pending-count{background:#C4511A;color:white;font-size:10px;padding:2px 6px;border-radius:10px;margin-left:6px;}
+.in-stock{background:rgba(21,87,36,0.2);color:#75B798;}
+.out-stock{background:rgba(114,28,36,0.2);color:#EA868F;}
+.pending-count{background:#C4511A;color:white;font-size:9px;padding:2px 6px;border-radius:10px;margin-left:4px;}
+.page-title{font-size:16px;font-weight:600;color:#F5ECD8;margin-bottom:16px;letter-spacing:0.04em;}
+.section-divider{border:none;border-top:1px solid rgba(201,149,42,0.1);margin:16px 0;}
+.user-activity{background:#120D09;border:1px solid rgba(201,149,42,0.08);padding:12px;margin-top:8px;font-size:12px;}
+.user-activity h4{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:#C9952A;margin-bottom:10px;}
+.activity-item{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(201,149,42,0.06);font-size:11px;}
+.activity-item:last-child{border-bottom:none;}
+.activity-item span{color:#8B6A45;}
+.activity-item strong{color:#F5ECD8;}
+.wallet-adjust{display:flex;gap:8px;margin-top:10px;}
+.wallet-adjust input{flex:1;padding:8px 12px;border:1px solid rgba(139,106,69,0.3);background:#0A0705;font-size:12px;color:#F5ECD8;outline:none;font-family:'Segoe UI',sans-serif;border-radius:0;}
+.order-items-list{background:#120D09;padding:12px;margin-top:8px;}
+.order-items-list h4{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:#C9952A;margin-bottom:8px;}
+.order-item-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(201,149,42,0.06);font-size:11px;}
+.order-item-row:last-child{border-bottom:none;}
+.order-item-row span{color:#8B6A45;}
+.order-item-row strong{color:#F5ECD8;}
+.bank-details{background:#120D09;padding:12px;margin:8px 0;}
+.bank-details p{font-size:12px;color:#8B6A45;margin-bottom:4px;}
+.bank-details strong{color:#F5ECD8;}
+.withdrawal-amount{font-size:18px;color:#C9952A;font-weight:600;margin:8px 0;}
+.search-box{width:100%;padding:10px 14px;border:1px solid rgba(139,106,69,0.3);background:#0A0705;font-size:13px;color:#F5ECD8;outline:none;font-family:'Segoe UI',sans-serif;border-radius:0;margin-bottom:16px;}
+.search-box:focus{border-color:#C9952A;}
+.reset-request-badge{background:rgba(196,81,26,0.15);color:#C4511A;font-size:9px;padding:2px 8px;border-radius:2px;margin-left:6px;text-transform:uppercase;letter-spacing:0.06em;}
 </style>
 </head>
 <body>
 
 <div class="top-nav">
   <div class="top-nav-logo">Fads by Phuray — Admin</div>
+  <div style="font-size:11px;color:#8B6A45;" id="navStats"></div>
 </div>
 
 <div class="tabs">
@@ -74,8 +91,9 @@ body{font-family:'Segoe UI',sans-serif;background:#FAF6F0;color:#1E1208;}
   <button class="tab" onclick="showPage('add',this)">Add Product</button>
   <button class="tab" onclick="showPage('products',this)">Products</button>
   <button class="tab" onclick="showPage('orders',this)">Orders</button>
-  <button class="tab" onclick="showPage('customers',this)">Customers</button>
-  <button class="tab" id="withdrawTab" onclick="showPage('withdrawals',this)">Withdrawals</button>
+  <button class="tab" onclick="showPage('users',this)" id="usersTab">Users</button>
+  <button class="tab" onclick="showPage('withdrawals',this)" id="withdrawTab">Withdrawals</button>
+  <button class="tab" onclick="showPage('resets',this)" id="resetsTab">Password Resets</button>
 </div>
 
 <div class="content">
@@ -85,10 +103,10 @@ body{font-family:'Segoe UI',sans-serif;background:#FAF6F0;color:#1E1208;}
     <div class="stats">
       <div class="stat"><div class="stat-num" id="statProducts">...</div><div class="stat-label">Products</div></div>
       <div class="stat"><div class="stat-num" id="statOrders">...</div><div class="stat-label">Orders</div></div>
-      <div class="stat"><div class="stat-num" id="statCustomers">...</div><div class="stat-label">Customers</div></div>
+      <div class="stat"><div class="stat-num" id="statUsers">...</div><div class="stat-label">Users</div></div>
       <div class="stat"><div class="stat-num" id="statRevenue">...</div><div class="stat-label">Revenue</div></div>
-      <div class="stat"><div class="stat-num" id="statPendingWithdrawals">...</div><div class="stat-label">Pending Withdrawals</div></div>
-      <div class="stat"><div class="stat-num" id="statTotalWithdrawals">...</div><div class="stat-label">Total Withdrawn</div></div>
+      <div class="stat"><div class="stat-num" id="statPendingW">...</div><div class="stat-label">Pending Withdrawals</div></div>
+      <div class="stat"><div class="stat-num" id="statTotalW">...</div><div class="stat-label">Total Withdrawn</div></div>
     </div>
     <div id="recentOrders"></div>
   </div>
@@ -111,6 +129,7 @@ body{font-family:'Segoe UI',sans-serif;background:#FAF6F0;color:#1E1208;}
           <option>Tops</option>
           <option>Trousers</option>
           <option>Accessories</option>
+          <option>Jewellery</option>
         </select>
       </div>
       <div class="fg"><label>Sizes</label><input type="text" id="pSizes" placeholder="e.g. XS, S, M, L, XL"><p class="fg-hint">Separate with commas</p></div>
@@ -126,26 +145,35 @@ body{font-family:'Segoe UI',sans-serif;background:#FAF6F0;color:#1E1208;}
 
   <!-- PRODUCTS -->
   <div class="page" id="page-products">
-    <div class="page-header"><div class="page-title">All Products</div></div>
+    <div class="page-title">All Products</div>
+    <input class="search-box" type="text" placeholder="Search products..." oninput="searchProducts(this.value)">
     <div id="productList"><div class="loading">Loading...</div></div>
   </div>
 
   <!-- ORDERS -->
   <div class="page" id="page-orders">
-    <div class="page-header"><div class="page-title">All Orders</div></div>
+    <div class="page-title">All Orders</div>
+    <input class="search-box" type="text" placeholder="Search by name or email..." oninput="searchOrders(this.value)">
     <div id="orderList"><div class="loading">Loading...</div></div>
   </div>
 
-  <!-- CUSTOMERS -->
-  <div class="page" id="page-customers">
-    <div class="page-header"><div class="page-title">All Customers</div></div>
-    <div id="customerList"><div class="loading">Loading...</div></div>
+  <!-- USERS -->
+  <div class="page" id="page-users">
+    <div class="page-title">All Users</div>
+    <input class="search-box" type="text" placeholder="Search by name or email..." oninput="searchUsers(this.value)">
+    <div id="userList"><div class="loading">Loading...</div></div>
   </div>
 
   <!-- WITHDRAWALS -->
   <div class="page" id="page-withdrawals">
-    <div class="page-header"><div class="page-title">Withdrawal Requests</div></div>
+    <div class="page-title">Withdrawal Requests</div>
     <div id="withdrawalList"><div class="loading">Loading...</div></div>
+  </div>
+
+  <!-- PASSWORD RESETS -->
+  <div class="page" id="page-resets">
+    <div class="page-title">Password Reset Requests</div>
+    <div id="resetList"><div class="loading">Loading...</div></div>
   </div>
 
 </div>
@@ -154,6 +182,9 @@ body{font-family:'Segoe UI',sans-serif;background:#FAF6F0;color:#1E1208;}
 
 <script>
 const API = 'https://fadsbyphuray-backend.onrender.com';
+let allProducts = [];
+let allOrders = [];
+let allUsers = [];
 
 function showPage(name, el) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -162,41 +193,44 @@ function showPage(name, el) {
   el.classList.add('active');
   if(name==='products') loadProducts();
   if(name==='orders') loadOrders();
-  if(name==='customers') loadCustomers();
+  if(name==='users') loadUsers();
   if(name==='dashboard') loadDashboard();
   if(name==='withdrawals') loadWithdrawals();
+  if(name==='resets') loadResets();
 }
 
-async function loadDashboard() {
+  async function loadDashboard() {
   try {
-    const [p,o,c,w] = await Promise.all([
+    const [p,o,u,w] = await Promise.all([
       fetch(API+'/api/products').then(r=>r.json()),
       fetch(API+'/api/orders').then(r=>r.json()),
-      fetch(API+'/api/customers').then(r=>r.json()),
+      fetch(API+'/api/users').then(r=>r.json()).catch(()=>[]),
       fetch(API+'/api/withdrawals').then(r=>r.json()).catch(()=>[])
     ]);
     document.getElementById('statProducts').textContent = p.length;
     document.getElementById('statOrders').textContent = o.length;
-    document.getElementById('statCustomers').textContent = c.length;
+    document.getElementById('statUsers').textContent = Array.isArray(u)?u.length:0;
     const rev = o.reduce((s,x)=>s+Number(x.total_amount||0),0);
     document.getElementById('statRevenue').textContent = '₦'+rev.toLocaleString();
     const pendingW = Array.isArray(w)?w.filter(x=>x.status==='pending'):[];
     const totalW = Array.isArray(w)?w.filter(x=>x.status==='paid').reduce((s,x)=>s+Number(x.amount||0),0):0;
-    document.getElementById('statPendingWithdrawals').textContent = pendingW.length;
-    document.getElementById('statTotalWithdrawals').textContent = '₦'+totalW.toLocaleString();
-    if(pendingW.length>0){
-      document.getElementById('withdrawTab').innerHTML = 'Withdrawals <span class="pending-count">'+pendingW.length+'</span>';
-    }
+    document.getElementById('statPendingW').textContent = pendingW.length;
+    document.getElementById('statTotalW').textContent = '₦'+totalW.toLocaleString();
+    // Update tab badges
+    if(pendingW.length>0) document.getElementById('withdrawTab').innerHTML = 'Withdrawals <span class="pending-count">'+pendingW.length+'</span>';
+    document.getElementById('navStats').textContent = o.length+' orders · ₦'+rev.toLocaleString()+' revenue';
+    // Recent orders
     const recentEl = document.getElementById('recentOrders');
     if(o.length===0){recentEl.innerHTML='<div class="empty">No orders yet</div>';return;}
-    recentEl.innerHTML='<div style="font-size:14px;font-weight:500;color:#1E1208;margin-bottom:12px;">Recent Orders</div>'+
+    recentEl.innerHTML='<div class="page-title" style="margin-bottom:12px;">Recent Orders</div>'+
       o.slice(0,5).map(x=>`
         <div class="card">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
-            <span style="font-size:12px;color:#C9952A;font-weight:500;">${x.transaction_ref||'N/A'}</span>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+            <span style="font-size:11px;color:#C9952A;font-weight:600;">${x.transaction_ref||'N/A'}</span>
             <span class="status-badge status-${x.status||'pending'}">${x.status||'pending'}</span>
           </div>
           <div class="card-title">${x.customer_name||'Unknown'}</div>
+          <div class="card-sub">${x.customer_email||''}</div>
           <div class="card-price">₦${Number(x.total_amount||0).toLocaleString()}</div>
         </div>`).join('');
   } catch(e) { showToast('Error loading dashboard'); }
@@ -207,18 +241,28 @@ async function loadProducts() {
   el.innerHTML='<div class="loading">Loading...</div>';
   try {
     const res = await fetch(API+'/api/products');
-    const data = await res.json();
-    if(data.length===0){el.innerHTML='<div class="empty">No products yet. Tap Add Product!</div>';return;}
-    el.innerHTML = data.map(p=>`
-      <div class="card">
-        <div class="card-title">${p.name}<span class="stock-badge ${p.in_stock?'in-stock':'out-stock'}">${p.in_stock?'In Stock':'Out of Stock'}</span></div>
-        <div class="card-sub">${p.category||''}</div>
-        <div class="card-sub">Sizes: ${Array.isArray(p.sizes)?p.sizes.join(', '):p.sizes}</div>
-        <div class="card-sub">Colours: ${Array.isArray(p.colours)?p.colours.join(', '):p.colours}</div>
-        <div class="card-price">₦${Number(p.price).toLocaleString()}</div>
-        <button class="btn-red" onclick="deleteProduct(${p.id},'${p.name}')">Delete</button>
-      </div>`).join('');
+    allProducts = await res.json();
+    renderProducts(allProducts);
   } catch(e) { el.innerHTML='<div class="empty">Error loading products</div>'; }
+}
+
+function renderProducts(data) {
+  const el = document.getElementById('productList');
+  if(data.length===0){el.innerHTML='<div class="empty">No products found</div>';return;}
+  el.innerHTML = data.map(p=>`
+    <div class="card">
+      <div class="card-title">${p.name}<span class="stock-badge ${p.in_stock?'in-stock':'out-stock'}">${p.in_stock?'In Stock':'Out of Stock'}</span></div>
+      <div class="card-sub">${p.category||''}</div>
+      <div class="card-sub">Sizes: ${Array.isArray(p.sizes)?p.sizes.join(', '):p.sizes}</div>
+      <div class="card-sub">Colours: ${Array.isArray(p.colours)?p.colours.join(', '):p.colours}</div>
+      <div class="card-price">₦${Number(p.price).toLocaleString()}</div>
+      <button class="btn-red" onclick="deleteProduct(${p.id},'${p.name}')">Delete</button>
+    </div>`).join('');
+}
+
+function searchProducts(q) {
+  const filtered = allProducts.filter(p => p.name.toLowerCase().includes(q.toLowerCase()) || (p.category||'').toLowerCase().includes(q.toLowerCase()));
+  renderProducts(filtered);
 }
 
 async function loadOrders() {
@@ -226,45 +270,90 @@ async function loadOrders() {
   el.innerHTML='<div class="loading">Loading...</div>';
   try {
     const res = await fetch(API+'/api/orders');
-    const data = await res.json();
-    if(data.length===0){el.innerHTML='<div class="empty">No orders yet</div>';return;}
-    el.innerHTML = data.map(o=>`
-      <div class="card">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-          <span style="font-size:12px;color:#C9952A;font-weight:500;">${o.transaction_ref||'N/A'}</span>
-          <span class="status-badge status-${o.status||'pending'}">${o.status||'pending'}</span>
-        </div>
-        <div class="card-title">${o.customer_name||'Unknown'}</div>
-        <div class="card-sub">${o.customer_email||''}</div>
-        <div class="card-sub">${o.customer_phone||''}</div>
-        <div class="card-sub">${o.delivery_address||''}</div>
-        <div class="card-sub">Shipping Zone: ${o.shipping_zone||'N/A'}</div>
-        <div class="card-price">₦${Number(o.total_amount||0).toLocaleString()}</div>
-        <select class="status-select" onchange="updateOrder(${o.id},this.value)">
-          <option value="pending" ${o.status==='pending'?'selected':''}>Pending</option>
-          <option value="processing" ${o.status==='processing'?'selected':''}>Processing</option>
-          <option value="shipped" ${o.status==='shipped'?'selected':''}>Shipped</option>
-          <option value="delivered" ${o.status==='delivered'?'selected':''}>Delivered</option>
-        </select>
-      </div>`).join('');
+    allOrders = await res.json();
+    renderOrders(allOrders);
   } catch(e) { el.innerHTML='<div class="empty">Error loading orders</div>'; }
 }
 
-async function loadCustomers() {
-  const el = document.getElementById('customerList');
+function renderOrders(data) {
+  const el = document.getElementById('orderList');
+  if(data.length===0){el.innerHTML='<div class="empty">No orders yet</div>';return;}
+  el.innerHTML = data.map(o=>{
+    let items = [];
+    try { items = typeof o.items === 'string' ? JSON.parse(o.items) : (o.items||[]); } catch(e) {}
+    return `
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <span style="font-size:11px;color:#C9952A;font-weight:600;">${o.transaction_ref||'N/A'}</span>
+        <span class="status-badge status-${o.status||'pending'}">${o.status||'pending'}</span>
+      </div>
+      <div class="card-title">${o.customer_name||'Unknown'}</div>
+      <div class="card-sub">📧 ${o.customer_email||''}</div>
+      <div class="card-sub">📞 ${o.customer_phone||''}</div>
+      <div class="card-sub">📍 ${o.delivery_address||''}</div>
+      <div class="card-sub">🚚 Zone: ${o.shipping_zone||'N/A'} · Shipping: ₦${Number(o.shipping_fee||0).toLocaleString()}</div>
+      <div class="card-sub">🔗 Referral: ${o.referral_code||'None'}</div>
+      <div class="card-sub">📅 ${new Date(o.created_at).toLocaleString()}</div>
+      <div class="card-price">Total: ₦${Number(o.total_amount||0).toLocaleString()}</div>
+      ${items.length>0?`
+      <div class="order-items-list">
+        <h4>Items Purchased</h4>
+        ${items.map(i=>`<div class="order-item-row"><span>${i.name||'Item'} (${i.size||''}) x${i.qty||1}</span><strong>₦${Number((i.price||0)*(i.qty||1)).toLocaleString()}</strong></div>`).join('')}
+      </div>`:''}
+      <select class="status-select" onchange="updateOrder(${o.id},this.value)">
+        <option value="pending" ${o.status==='pending'?'selected':''}>Pending</option>
+        <option value="processing" ${o.status==='processing'?'selected':''}>Processing</option>
+        <option value="shipped" ${o.status==='shipped'?'selected':''}>Shipped</option>
+        <option value="delivered" ${o.status==='delivered'?'selected':''}>Delivered</option>
+      </select>
+    </div>`}).join('');
+}
+
+function searchOrders(q) {
+  const filtered = allOrders.filter(o =>
+    (o.customer_name||'').toLowerCase().includes(q.toLowerCase()) ||
+    (o.customer_email||'').toLowerCase().includes(q.toLowerCase()) ||
+    (o.transaction_ref||'').toLowerCase().includes(q.toLowerCase())
+  );
+  renderOrders(filtered);
+}
+
+async function loadUsers() {
+  const el = document.getElementById('userList');
   el.innerHTML='<div class="loading">Loading...</div>';
   try {
-    const res = await fetch(API+'/api/customers');
-    const data = await res.json();
-    if(data.length===0){el.innerHTML='<div class="empty">No customers yet</div>';return;}
-    el.innerHTML = data.map(c=>`
-      <div class="card">
-        <div class="card-title">${c.name||'Unknown'}</div>
-        <div class="card-sub">📧 ${c.email||''}</div>
-        <div class="card-sub">📞 ${c.phone||''}</div>
-        <div class="card-sub">📍 ${c.address||''}</div>
-      </div>`).join('');
-  } catch(e) { el.innerHTML='<div class="empty">Error loading customers</div>'; }
+    const res = await fetch(API+'/api/users');
+    allUsers = await res.json();
+    renderUsers(allUsers);
+  } catch(e) { el.innerHTML='<div class="empty">Error loading users</div>'; }
+}
+
+function renderUsers(data) {
+  const el = document.getElementById('userList');
+  if(data.length===0){el.innerHTML='<div class="empty">No registered users yet</div>';return;}
+  el.innerHTML = data.map(u=>`
+    <div class="card">
+      <div class="card-title">${u.name||'Unknown'}</div>
+      <div class="card-sub">📧 ${u.email||''}</div>
+      <div class="card-sub">📞 ${u.phone||'N/A'}</div>
+      <div class="card-sub">📅 Joined: ${new Date(u.created_at).toLocaleDateString()}</div>
+      <div class="card-price">Wallet: ₦${Number(u.wallet_balance||0).toLocaleString()}</div>
+      <div class="user-activity">
+        <h4>Adjust Wallet Balance</h4>
+        <div class="wallet-adjust">
+          <input type="number" id="walletAmt_${u.id}" placeholder="Amount (e.g. 500 or -500)">
+          <button class="btn-gold" onclick="adjustWallet(${u.id},'${u.email}')">Update</button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function searchUsers(q) {
+  const filtered = allUsers.filter(u =>
+    (u.name||'').toLowerCase().includes(q.toLowerCase()) ||
+    (u.email||'').toLowerCase().includes(q.toLowerCase())
+  );
+  renderUsers(filtered);
 }
 
 async function loadWithdrawals() {
@@ -275,27 +364,53 @@ async function loadWithdrawals() {
     if(!res.ok){el.innerHTML='<div class="empty">No withdrawal requests yet</div>';return;}
     const data = await res.json();
     if(!Array.isArray(data)||data.length===0){el.innerHTML='<div class="empty">No withdrawal requests yet</div>';return;}
-    el.innerHTML = data.map(w=>`
+    const pending = data.filter(w=>w.status==='pending');
+    const others = data.filter(w=>w.status!=='pending');
+    const renderW = (list) => list.map(w=>`
       <div class="card">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-          <span style="font-size:12px;color:#9C7A58;">${new Date(w.created_at).toLocaleDateString()}</span>
+          <span style="font-size:11px;color:#8B6A45;">📅 ${new Date(w.created_at).toLocaleString()}</span>
           <span class="status-badge status-${w.status||'pending'}">${w.status||'pending'}</span>
         </div>
         <div class="card-title">${w.name||'Unknown'}</div>
         <div class="card-sub">📧 ${w.email||''}</div>
         <div class="withdrawal-amount">₦${Number(w.amount||0).toLocaleString()}</div>
         <div class="bank-details">
-          <p><span>Account Name: </span>${w.account_name||''}</p>
-          <p><span>Bank: </span>${w.bank_name||''}</p>
-          <p><span>Account Number: </span>${w.account_number||''}</p>
+          <p><strong>Account Name:</strong> ${w.account_name||''}</p>
+          <p><strong>Bank:</strong> ${w.bank_name||''}</p>
+          <p><strong>Account Number:</strong> ${w.account_number||''}</p>
         </div>
         ${w.status==='pending'?`
-        <div class="withdrawal-actions">
-          <button class="btn-approve" onclick="updateWithdrawal(${w.id},'paid')">✓ Mark as Paid</button>
-          <button class="btn-reject" onclick="updateWithdrawal(${w.id},'rejected')">✗ Reject</button>
+        <div style="display:flex;gap:8px;margin-top:10px;">
+          <button class="btn-green" style="margin-top:0;flex:1;" onclick="updateWithdrawal(${w.id},'paid')">✓ Mark as Paid</button>
+          <button class="btn-reject" style="margin-top:0;flex:1;" onclick="updateWithdrawal(${w.id},'rejected')">✗ Reject</button>
         </div>`:''}
       </div>`).join('');
+    el.innerHTML = (pending.length>0?'<div style="font-size:11px;color:#C9952A;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:12px;">Pending Requests</div>'+renderW(pending):'') +
+      (others.length>0?'<hr class="section-divider"><div style="font-size:11px;color:#8B6A45;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:12px;">Processed</div>'+renderW(others):'');
   } catch(e) { el.innerHTML='<div class="empty">No withdrawal requests yet</div>'; }
+}
+
+async function loadResets() {
+  const el = document.getElementById('resetList');
+  el.innerHTML='<div class="loading">Loading...</div>';
+  try {
+    const res = await fetch(API+'/api/users');
+    const users = await res.json();
+    const resetUsers = users.filter(u => u.reset_token);
+    if(resetUsers.length===0){
+      el.innerHTML='<div class="empty">No pending password reset requests</div>';
+      return;
+    }
+    el.innerHTML = resetUsers.map(u=>`
+      <div class="card">
+        <div class="card-title">${u.name||'Unknown'} <span class="reset-request-badge">Reset Requested</span></div>
+        <div class="card-sub">📧 ${u.email||''}</div>
+        <div class="card-sub">📅 Joined: ${new Date(u.created_at).toLocaleDateString()}</div>
+        <p style="font-size:12px;color:#8B6A45;margin-top:8px;">A password reset email has been sent to this user automatically. If they didn't receive it, you can resend below.</p>
+        <button class="btn-gold" style="margin-top:10px;" onclick="resendReset('${u.email}','${u.name}')">Resend Reset Email</button>
+      </div>`).join('');
+  } catch(e) { el.innerHTML='<div class="empty">Error loading reset requests</div>'; }
 }
 
 async function saveProduct() {
@@ -309,48 +424,54 @@ async function saveProduct() {
   const inStock = document.getElementById('pStock').value==='true';
   if(!name||!price){showToast('Please enter product name and price');return;}
   try {
-    const res = await fetch(API+'/api/products',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({name,description:desc,price:Number(price),category,sizes,colours,images:image?[image]:[],inStock})
-    });
+    const res = await fetch(API+'/api/products',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,description:desc,price:Number(price),category,sizes,colours,images:image?[image]:[],inStock})});
     if(res.ok){
-      showToast('Product saved successfully!');
-      document.getElementById('pName').value='';
-      document.getElementById('pDesc').value='';
-      document.getElementById('pPrice').value='';
-      document.getElementById('pSizes').value='';
-      document.getElementById('pColours').value='';
-      document.getElementById('pImage').value='';
+      showToast('Product saved! ✓');
+      document.getElementById('pName').value='';document.getElementById('pDesc').value='';
+      document.getElementById('pPrice').value='';document.getElementById('pSizes').value='';
+      document.getElementById('pColours').value='';document.getElementById('pImage').value='';
     }else{showToast('Error saving product');}
   }catch(e){showToast('Error saving product');}
 }
 
 async function deleteProduct(id,name){
   if(!confirm('Delete '+name+'?'))return;
-  try{
-    await fetch(API+'/api/products/'+id,{method:'DELETE'});
-    showToast('Product deleted');
-    loadProducts();
-  }catch(e){showToast('Error deleting product');}
+  try{await fetch(API+'/api/products/'+id,{method:'DELETE'});showToast('Product deleted');loadProducts();}
+  catch(e){showToast('Error deleting product');}
 }
 
 async function updateOrder(id,status){
   try{
     await fetch(API+'/api/orders/'+id,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({status})});
-    showToast('Order status updated!');
+    showToast('Order updated — customer notified ✓');
   }catch(e){showToast('Error updating order');}
+}
+
+async function adjustWallet(userId, email){
+  const amtEl = document.getElementById('walletAmt_'+userId);
+  const amount = Number(amtEl.value);
+  if(!amount){showToast('Please enter an amount');return;}
+  try{
+    const res = await fetch(API+'/api/users/'+userId+'/wallet',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({amount,description:'Manual adjustment by admin'})});
+    if(res.ok){showToast('Wallet updated ✓');amtEl.value='';loadUsers();}
+    else{showToast('Error updating wallet');}
+  }catch(e){showToast('Error updating wallet');}
 }
 
 async function updateWithdrawal(id,status){
   try{
     const res = await fetch(API+'/api/withdrawals/'+id,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({status})});
-    if(res.ok){
-      showToast(status==='paid'?'Marked as paid!':'Withdrawal rejected');
-      loadWithdrawals();
-      loadDashboard();
-    }else{showToast('Error updating withdrawal');}
+    if(res.ok){showToast(status==='paid'?'Marked as paid — user notified ✓':'Withdrawal rejected — user notified');loadWithdrawals();loadDashboard();}
+    else{showToast('Error updating withdrawal');}
   }catch(e){showToast('Error updating withdrawal');}
+}
+
+async function resendReset(email, name){
+  try{
+    const res = await fetch(API+'/api/auth/forgot-password',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email})});
+    if(res.ok){showToast('Reset email resent to '+email+' ✓');}
+    else{showToast('Error sending reset email');}
+  }catch(e){showToast('Error sending reset email');}
 }
 
 function showToast(msg){
