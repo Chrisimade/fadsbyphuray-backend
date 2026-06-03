@@ -81,10 +81,10 @@ app.get('/api/products', async (req, res) => {
 
 app.post('/api/products', async (req, res) => {
   try {
-    const { name, description, price, category, sizes, colours, images, inStock } = req.body;
+    const { name, description, price, category, sizes, colours, images, inStock, gender } = req.body;
     const result = await pool.query(
-      'INSERT INTO products (name, description, price, category, sizes, colours, images, in_stock, created_at, updated_at) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,NOW(),NOW()) RETURNING *',
-      [name, description, price, category, JSON.stringify(sizes), JSON.stringify(colours), JSON.stringify(images || []), inStock !== false]
+      'INSERT INTO products (name, description, price, category, sizes, colours, images, in_stock, gender, created_at, updated_at) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,NOW(),NOW()) RETURNING *',
+      [name, description, price, category, JSON.stringify(sizes), JSON.stringify(colours), JSON.stringify(images || []), inStock !== false, JSON.stringify(gender || [])]
     );
     res.json(result.rows[0]);
   } catch (err) {
@@ -94,10 +94,10 @@ app.post('/api/products', async (req, res) => {
 
 app.put('/api/products/:id', async (req, res) => {
   try {
-    const { name, description, price, category, sizes, colours, images, inStock } = req.body;
+    const { name, description, price, category, sizes, colours, images, inStock, gender } = req.body;
     const result = await pool.query(
-      'UPDATE products SET name=$1, description=$2, price=$3, category=$4, sizes=$5, colours=$6, images=$7, in_stock=$8, updated_at=NOW() WHERE id=$9 RETURNING *',
-      [name, description, price, category, JSON.stringify(sizes), JSON.stringify(colours), JSON.stringify(images || []), inStock !== false, req.params.id]
+      'UPDATE products SET name=$1, description=$2, price=$3, category=$4, sizes=$5, colours=$6, images=$7, in_stock=$8, gender=$9, updated_at=NOW() WHERE id=$10 RETURNING *',
+      [name, description, price, category, JSON.stringify(sizes), JSON.stringify(colours), JSON.stringify(images || []), inStock !== false, JSON.stringify(gender || []), req.params.id]
     );
     res.json(result.rows[0]);
   } catch (err) {
@@ -479,7 +479,8 @@ app.put('/api/withdrawals/:id', async (req, res) => {
 // ── DATABASE SETUP ──
 async function setupDatabase() {
   try {
-    await pool.query(`CREATE TABLE IF NOT EXISTS products (id SERIAL PRIMARY KEY, name VARCHAR(255) NOT NULL, description TEXT, price DECIMAL(10,2) NOT NULL, category VARCHAR(100), sizes JSONB DEFAULT '[]', colours JSONB DEFAULT '[]', images JSONB DEFAULT '[]', in_stock BOOLEAN DEFAULT true, created_at TIMESTAMP DEFAULT NOW(), updated_at TIMESTAMP DEFAULT NOW())`);
+    await pool.query(`CREATE TABLE IF NOT EXISTS products (id SERIAL PRIMARY KEY, name VARCHAR(255) NOT NULL, description TEXT, price DECIMAL(10,2) NOT NULL, category VARCHAR(100), sizes JSONB DEFAULT '[]', colours JSONB DEFAULT '[]', images JSONB DEFAULT '[]', in_stock BOOLEAN DEFAULT true, gender JSONB DEFAULT '[]', created_at TIMESTAMP DEFAULT NOW(), updated_at TIMESTAMP DEFAULT NOW())`);
+    await pool.query(`ALTER TABLE products ADD COLUMN IF NOT EXISTS gender JSONB DEFAULT '[]'`).catch(()=>{});
     await pool.query(`CREATE TABLE IF NOT EXISTS customers (id SERIAL PRIMARY KEY, name VARCHAR(255), email VARCHAR(255) UNIQUE, phone VARCHAR(50), address TEXT, created_at TIMESTAMP DEFAULT NOW())`);
     await pool.query(`CREATE TABLE IF NOT EXISTS orders (id SERIAL PRIMARY KEY, customer_name VARCHAR(255), customer_email VARCHAR(255), customer_phone VARCHAR(50), delivery_address TEXT, total_amount DECIMAL(10,2), shipping_fee DECIMAL(10,2) DEFAULT 0, shipping_zone VARCHAR(100), transaction_ref VARCHAR(255), transaction_id VARCHAR(255), referral_code VARCHAR(255), items JSONB DEFAULT '[]', status VARCHAR(50) DEFAULT 'pending', created_at TIMESTAMP DEFAULT NOW())`);
     await pool.query(`CREATE TABLE IF NOT EXISTS users (id SERIAL PRIMARY KEY, name VARCHAR(255), email VARCHAR(255) UNIQUE, phone VARCHAR(50), password VARCHAR(255), wallet_balance DECIMAL(10,2) DEFAULT 0, reset_token VARCHAR(255), reset_expiry TIMESTAMP, created_at TIMESTAMP DEFAULT NOW())`);
@@ -503,4 +504,3 @@ app.listen(PORT, async () => {
   await setupDatabase();
   console.log('Fads by Phuray backend running on port ' + PORT);
 });
-      
