@@ -199,7 +199,7 @@ function showPage(name, el) {
   if(name==='resets') loadResets();
 }
 
-  async function loadDashboard() {
+async function loadDashboard() {
   try {
     const [p,o,u,w] = await Promise.all([
       fetch(API+'/api/products').then(r=>r.json()),
@@ -256,7 +256,29 @@ function renderProducts(data) {
       <div class="card-sub">Sizes: ${Array.isArray(p.sizes)?p.sizes.join(', '):p.sizes}</div>
       <div class="card-sub">Colours: ${Array.isArray(p.colours)?p.colours.join(', '):p.colours}</div>
       <div class="card-price">₦${Number(p.price).toLocaleString()}</div>
-      <button class="btn-red" onclick="deleteProduct(${p.id},'${p.name}')">Delete</button>
+      <div style="display:flex;gap:8px;margin-top:10px;">
+        <button class="btn-gold" style="margin-top:0;flex:1;" onclick="openEditProduct(${p.id})">Edit</button>
+        <button class="btn-red" style="margin-top:0;flex:1;border:none;background:#C4511A;color:white;padding:10px;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;font-family:'Segoe UI',sans-serif;" onclick="deleteProduct(${p.id},'${p.name}')">Delete</button>
+      </div>
+      <div id="editForm_${p.id}" style="display:none;margin-top:14px;background:#120D09;padding:14px;border:1px solid rgba(201,149,42,0.15);">
+        <div class="fg"><label>Product Name</label><input type="text" id="eName_${p.id}" value="${(p.name||'').replace(/"/g,'&quot;')}"></div>
+        <div class="fg"><label>Description</label><textarea id="eDesc_${p.id}">${p.description||''}</textarea></div>
+        <div class="fg"><label>Price (₦)</label><input type="number" id="ePrice_${p.id}" value="${p.price||''}"></div>
+        <div class="fg"><label>Category</label><select id="eCat_${p.id}">
+          ${['Dresses','Traditional Wear','Jumpsuits','Sets','Outerwear','Tops','Trousers','Accessories','Jewellery'].map(c=>`<option value="${c}" ${p.category===c?'selected':''}>${c}</option>`).join('')}
+        </select></div>
+        <div class="fg"><label>Sizes</label><input type="text" id="eSizes_${p.id}" value="${Array.isArray(p.sizes)?p.sizes.join(', '):p.sizes||''}"><p class="fg-hint">Separate with commas</p></div>
+        <div class="fg"><label>Colours</label><input type="text" id="eColours_${p.id}" value="${Array.isArray(p.colours)?p.colours.join(', '):p.colours||''}"><p class="fg-hint">Separate with commas</p></div>
+        <div class="fg"><label>Product Image URL</label><input type="text" id="eImage_${p.id}" value="${Array.isArray(p.images)&&p.images.length>0?p.images[0]:''}"><p class="fg-hint">Upload to Cloudinary and paste URL here</p></div>
+        <div class="fg"><label>Stock Status</label><select id="eStock_${p.id}">
+          <option value="true" ${p.in_stock?'selected':''}>In Stock</option>
+          <option value="false" ${!p.in_stock?'selected':''}>Out of Stock</option>
+        </select></div>
+        <div style="display:flex;gap:8px;">
+          <button class="btn-save" style="flex:1;" onclick="saveEditProduct(${p.id})">Save Changes</button>
+          <button class="btn-red" style="flex:1;margin-top:0;border:none;background:transparent;border:1px solid #C4511A;color:#C4511A;padding:14px;cursor:pointer;" onclick="document.getElementById('editForm_${p.id}').style.display='none'">Cancel</button>
+        </div>
+      </div>
     </div>`).join('');
 }
 
@@ -430,6 +452,7 @@ async function saveProduct() {
       document.getElementById('pName').value='';document.getElementById('pDesc').value='';
       document.getElementById('pPrice').value='';document.getElementById('pSizes').value='';
       document.getElementById('pColours').value='';document.getElementById('pImage').value='';
+      loadDashboard();
     }else{showToast('Error saving product');}
   }catch(e){showToast('Error saving product');}
 }
@@ -472,6 +495,30 @@ async function resendReset(email, name){
     if(res.ok){showToast('Reset email resent to '+email+' ✓');}
     else{showToast('Error sending reset email');}
   }catch(e){showToast('Error sending reset email');}
+}
+
+function openEditProduct(id){
+  // Close all other open edit forms first
+  document.querySelectorAll('[id^="editForm_"]').forEach(el=>el.style.display='none');
+  const form = document.getElementById('editForm_'+id);
+  if(form) form.style.display = form.style.display==='none'?'block':'none';
+}
+
+async function saveEditProduct(id){
+  const name = document.getElementById('eName_'+id).value.trim();
+  const desc = document.getElementById('eDesc_'+id).value.trim();
+  const price = document.getElementById('ePrice_'+id).value.trim();
+  const category = document.getElementById('eCat_'+id).value;
+  const sizes = document.getElementById('eSizes_'+id).value.split(',').map(s=>s.trim()).filter(s=>s);
+  const colours = document.getElementById('eColours_'+id).value.split(',').map(c=>c.trim()).filter(c=>c);
+  const image = document.getElementById('eImage_'+id).value.trim();
+  const inStock = document.getElementById('eStock_'+id).value==='true';
+  if(!name||!price){showToast('Please enter product name and price');return;}
+  try{
+    const res = await fetch(API+'/api/products/'+id,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,description:desc,price:Number(price),category,sizes,colours,images:image?[image]:[],inStock})});
+    if(res.ok){showToast('Product updated! ✓');loadProducts();}
+    else{showToast('Error updating product');}
+  }catch(e){showToast('Error updating product');}
 }
 
 function showToast(msg){
