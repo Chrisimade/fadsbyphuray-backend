@@ -139,6 +139,14 @@ body{font-family:'Segoe UI',sans-serif;background:#0A0705;color:#F5ECD8;}
         <label>Stock Status</label>
         <select id="pStock"><option value="true">In Stock</option><option value="false">Out of Stock</option></select>
       </div>
+      <div class="fg">
+        <label>Gender</label>
+        <p class="fg-hint" style="margin-bottom:8px;">Select all that apply</p>
+        <div style="display:flex;gap:16px;">
+          <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:#F5ECD8;text-transform:none;letter-spacing:0;"><input type="checkbox" id="pGenderWomen" value="Women" style="width:auto;accent-color:#C9952A;"> Women</label>
+          <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:#F5ECD8;text-transform:none;letter-spacing:0;"><input type="checkbox" id="pGenderMen" value="Men" style="width:auto;accent-color:#C9952A;"> Men</label>
+        </div>
+      </div>
       <button class="btn-save" onclick="saveProduct()">Save Product</button>
     </div>
   </div>
@@ -253,6 +261,7 @@ function renderProducts(data) {
     <div class="card">
       <div class="card-title">${p.name}<span class="stock-badge ${p.in_stock?'in-stock':'out-stock'}">${p.in_stock?'In Stock':'Out of Stock'}</span></div>
       <div class="card-sub">${p.category||''}</div>
+      <div class="card-sub">Gender: ${Array.isArray(p.gender)&&p.gender.length>0?p.gender.join(' & '):'Not set'}</div>
       <div class="card-sub">Sizes: ${Array.isArray(p.sizes)?p.sizes.join(', '):p.sizes}</div>
       <div class="card-sub">Colours: ${Array.isArray(p.colours)?p.colours.join(', '):p.colours}</div>
       <div class="card-price">₦${Number(p.price).toLocaleString()}</div>
@@ -274,6 +283,14 @@ function renderProducts(data) {
           <option value="true" ${p.in_stock?'selected':''}>In Stock</option>
           <option value="false" ${!p.in_stock?'selected':''}>Out of Stock</option>
         </select></div>
+        <div class="fg">
+          <label>Gender</label>
+          <p class="fg-hint" style="margin-bottom:8px;">Select all that apply</p>
+          <div style="display:flex;gap:16px;">
+            <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:#F5ECD8;text-transform:none;letter-spacing:0;"><input type="checkbox" id="eGenderWomen_${p.id}" ${Array.isArray(p.gender)&&p.gender.includes('Women')?'checked':''} style="width:auto;accent-color:#C9952A;"> Women</label>
+                        <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:#F5ECD8;text-transform:none;letter-spacing:0;"><input type="checkbox" id="eGenderMen_${p.id}" ${Array.isArray(p.gender)&&p.gender.includes('Men')?'checked':''} style="width:auto;accent-color:#C9952A;"> Men</label>
+          </div>
+        </div>
         <div style="display:flex;gap:8px;">
           <button class="btn-save" style="flex:1;" onclick="saveEditProduct(${p.id})">Save Changes</button>
           <button class="btn-red" style="flex:1;margin-top:0;border:none;background:transparent;border:1px solid #C4511A;color:#C4511A;padding:14px;cursor:pointer;" onclick="document.getElementById('editForm_${p.id}').style.display='none'">Cancel</button>
@@ -444,14 +461,18 @@ async function saveProduct() {
   const colours = document.getElementById('pColours').value.split(',').map(c=>c.trim()).filter(c=>c);
   const image = document.getElementById('pImage').value.trim();
   const inStock = document.getElementById('pStock').value==='true';
+  const gender = [];
+  if(document.getElementById('pGenderWomen').checked) gender.push('Women');
+  if(document.getElementById('pGenderMen').checked) gender.push('Men');
   if(!name||!price){showToast('Please enter product name and price');return;}
   try {
-    const res = await fetch(API+'/api/products',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,description:desc,price:Number(price),category,sizes,colours,images:image?[image]:[],inStock})});
+    const res = await fetch(API+'/api/products',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,description:desc,price:Number(price),category,sizes,colours,images:image?[image]:[],inStock,gender})});
     if(res.ok){
       showToast('Product saved! ✓');
       document.getElementById('pName').value='';document.getElementById('pDesc').value='';
       document.getElementById('pPrice').value='';document.getElementById('pSizes').value='';
       document.getElementById('pColours').value='';document.getElementById('pImage').value='';
+      document.getElementById('pGenderWomen').checked=false;document.getElementById('pGenderMen').checked=false;
       loadDashboard();
     }else{showToast('Error saving product');}
   }catch(e){showToast('Error saving product');}
@@ -513,9 +534,12 @@ async function saveEditProduct(id){
   const colours = document.getElementById('eColours_'+id).value.split(',').map(c=>c.trim()).filter(c=>c);
   const image = document.getElementById('eImage_'+id).value.trim();
   const inStock = document.getElementById('eStock_'+id).value==='true';
+  const gender = [];
+  if(document.getElementById('eGenderWomen_'+id).checked) gender.push('Women');
+  if(document.getElementById('eGenderMen_'+id).checked) gender.push('Men');
   if(!name||!price){showToast('Please enter product name and price');return;}
   try{
-    const res = await fetch(API+'/api/products/'+id,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,description:desc,price:Number(price),category,sizes,colours,images:image?[image]:[],inStock})});
+    const res = await fetch(API+'/api/products/'+id,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,description:desc,price:Number(price),category,sizes,colours,images:image?[image]:[],inStock,gender})});
     if(res.ok){showToast('Product updated! ✓');loadProducts();}
     else{showToast('Error updating product');}
   }catch(e){showToast('Error updating product');}
